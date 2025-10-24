@@ -1,0 +1,18 @@
+<% if(items!=null) { %>
+            <div class="mt-6 text-sm text-blue-800">
+                <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Quantity On Hand</th>
+                    <th>In Use</th>
+                </tr>
+                <% items.forEach(function(item) { %>
+                <tr>
+                    <td><%= item.name%></td>
+                    <td><%= item.inStock%></td>
+                    <td><%= item.inUse%></td>
+                </tr>
+                <% }) %>
+                </table>
+            </div>
+            <% } %>
