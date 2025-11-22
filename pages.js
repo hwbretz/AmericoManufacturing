@@ -3,18 +3,17 @@ const express = require("express");
 const router = express.Router();
 const models = require("./models");
 
+//router.get("/[page]")
+
+//home
 router.get("/", async (req, res) => {
     if (req.session.name) {
-        var name = req.session.name;
-        const items = await models.Item.find();
-        if(items){
-            return res.render("home", {name: name, items:items});
-        } else{
-            return res.render("home", {name});
-        }
-        
+        var username = req.session.name;
+        const user = await models.User.findOne({username: username});
+        console.log(`${user.manager}`)
+        return res.render("home", {name: user.name, manager: user.manager});
     }
-    return res.render("home", { name: null, items: null});
+    return res.render("home", { name: null});
 });
 
 router.get("/login", (req, res) => {
@@ -29,6 +28,20 @@ router.get("/register", (req, res) => {
         return res.redirect("/");
     }
     return res.render("register", {error: null});
+});
+
+router.get("/addItem", async (req, res) => {
+    if (req.session.name) {
+        var name = req.session.name;
+        const items = await models.Item.find();
+        if(items){
+            return res.render("addItem", {name: name, items:items});
+        } else{
+            return res.render("addItem", {name: name});
+        }
+        
+    }
+    return res.render("home", { name: null, items: null});
 });
 
 module.exports = router;

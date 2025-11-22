@@ -1,0 +1,155 @@
+<!-- Home.ejs -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Create Order</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <style>
+        body {
+            overflow-y: auto;
+        }
+        table,
+        td,
+        th {
+            border: 1px solid;
+            padding: 5px;
+        }
+
+        table {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="overflow-hidden h-screen p-8 bg-slate-200">
+        <header class="absolute inset-x-0
+        						top-0 z-50">
+            <nav class="flex items-center p-6 lg:px-8"
+                 aria-label="Global">
+                <div class="flex lg:flex-1 text-blue-800 text-2xl">
+                    <a className=" border-collapse text-blue-800 text-lg"
+                       href="/">
+                        Americo Manufacturing Corporation
+                    </a>
+                </div>
+            </nav>
+        </header>
+
+        <% if (name) { %>
+        <div class="pt-10">
+            <h1 class="text-sm font-bold tracking-tight
+                       text-gray-900 sm:text-xl">
+                Create New Order
+            </h1>
+            <p class="mt-1 text-lg leading-8 text-gray-600">
+                User: <%= name %>
+            </p>
+            <%/*
+            <% if(items) { %>
+                <p class="mt-1 text-lg leading-8 text-gray-600">
+                    Current Inventory
+                </p>
+                <div class="mt-1 text-sm text-black">
+                    <table>
+                        <tr>
+                            <th>Name</th>
+                            <th>Quantity On Hand</th>
+                            <th>In Use</th>
+                        </tr>
+                        <% items.forEach(item => { %>
+                            <tr>
+                                <td><%= item.name%></td>
+                                <td><%= item.inStock%></td>
+                                <td><%= item.inUse%></td>
+                            </tr>
+                        <% }) %>
+                    </table>
+                </div>
+            <% } %>
+            */%>
+        <div class="pt-10">
+            <h1 class="text-2xl font-bold mb-6 ">Create New Order</h1>
+                <form class="w-full max-w-sm  bg-white p-8
+                     rounded-md shadow-md" method="post" action="/api/createOrder">
+                     <div class="mb-4">
+                         <label class="block text-gray-700
+                                       text-sm font-bold mb-2"
+                                for="name">
+                             Name
+                         </label>
+                         <select name="name" id="name">
+                           <% items.forEach(item => { %>
+                             <option value=`${item.itemID}`>% <% item.name %> </option><
+                           <% }) %>
+
+                         </select>
+                     </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700
+                                      text-sm font-bold mb-2"
+                               for="quantity">
+                            Quantity
+                        </label>
+                        <input class="w-full px-3 py-2 border
+                                      border-gray-300 rounded-md
+                                      focus:outline-none
+                                      focus:border-indigo-500"
+                               type="number" id="quantity"
+                               name="quantity"
+                               placeholder="0" />
+                    </div>
+
+                    <button class="w-full
+                                   bg-indigo-500
+                                   text-white
+                                   text-sm font-bold
+                                   py-2 px-4
+                                   rounded-md hover:bg-indigo-600
+                                   transition duration-300"
+                                   type="submit"
+                                   onClick={submit}>
+                        Submit Order
+                    </button>
+                </form>
+
+        </div>
+            <div class="mt-10 flex gap-x-6">
+                <a href="/api/logout"
+                   class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm
+                          font-semibold text-white shadow-sm hover:bg-indigo-500
+                          focus-visible:outline focus-visible:outline-2
+                          focus-visible:outline-offset-2
+                          focus-visible:outline-indigo-600">
+                    Logout
+                </a>
+            </div>
+
+            <% } else { %>
+            <div class="pt-4 mt-2">
+                <h1 class="text-sm font-bold tracking-tight
+                       text-gray-900 sm:text-xl">
+                    Invalid User
+                </h1>
+                <p class="mt-6 text-lg leading-8 text-gray-600">
+                    Identity Unverified
+                </p>
+                <div class="mt-10 flex gap-x-6">
+                    <a href="/login"
+                       class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm
+                              font-semibold text-white shadow-sm
+                              hover:bg-indigo-500 focus-visible:outline
+                              focus-visible:outline-2 focus-visible:outline-offset-2
+                              focus-visible:outline-indigo-600">
+                        Login/Register
+                    </a>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </div>
+</body>
+
+</html>

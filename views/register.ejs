@@ -32,7 +32,19 @@
                     <% } %>
                     <div class="mb-4">
                         <label class="block text-gray-700 
-                   text-sm font-bold mb-2" for="username">
+                   text-sm font-bold mb-2" for="name">
+                            Name
+                        </label>
+                        <input class="w-full px-3 py-2 border 
+                                      border-gray-300 rounded-md 
+                                      focus:outline-none 
+                                      focus:border-indigo-500"
+                                      type="text" id="name" 
+                                      name="name"
+                               placeholder="Jane Doe" />
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
                             UserName
                         </label>
                         <input class="w-full px-3 py-2 border 
@@ -42,6 +54,27 @@
                                       type="text" id="username" 
                                       name="username"
                                placeholder="John_01" />
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="manager">
+                            Manager
+                        </label>
+                        <select name="manager" id="manager">
+                            <option value="false">No</option>
+                            <option value="true">Yes</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
+                            email
+                        </label>
+                        <input class="w-full px-3 py-2 border 
+                                      border-gray-300 rounded-md 
+                                      focus:outline-none 
+                                      focus:border-indigo-500"
+                                      type="text" id="email" 
+                                      name="email"
+                               placeholder="JaneDoe@geocities.com" />
                     </div>
                     <div class="mb-4">
                         <label class="block text-gray-700 

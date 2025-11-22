@@ -7,11 +7,11 @@ const passport = require("passport");
 const bcrypt = require("bcrypt");
 const { error } = require("console");
 
-//route regi
+//register route
 router.post("/register", async (req, res) => {
     //console.log(req.body);
-    const { username,  password, confirmpassword} = req.body;
-    if (!username && !password && !confirmpassword) {
+    const { username, name,  password, confirmpassword, manager, email, } = req.body;
+    if (!username && !password && !confirmpassword && !name && !email && !manager) {
         return res.status(403).render("register", {error: "Missing information"});
     }
     else if (confirmpassword !== password) {
@@ -29,7 +29,7 @@ router.post("/register", async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
 
         // create and add new user
-        const newUser = new models.User({username,password: hashedPassword});
+        const newUser = new models.User({username,password: hashedPassword, name : name, email : email, manager: manager});
         await newUser.save();
         return res.redirect("/login");
     } catch (err) {
