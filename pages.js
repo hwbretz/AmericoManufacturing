@@ -10,7 +10,7 @@ router.get("/", async (req, res) => {
     if (req.session.name) {
         var username = req.session.name;
         const user = await models.User.findOne({username: username});
-        console.log(`${user.manager}`)
+        
         return res.render("home", {name: user.name, manager: user.manager});
     }
     return res.render("home", { name: null});

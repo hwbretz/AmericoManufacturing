@@ -58,7 +58,7 @@ router.get("/logout", (req, res) => {
 //addItem
 router.post("/addItem", async (req, res) => {
     console.log(req.body);
-    const { name,  quantity, inUse} = req.body;
+    const { name,  quantity, current} = req.body;
     if (!name && !quantity && !inUse) {
         return res.status(403).render("addItem", {error: "Missing information"});
     }
@@ -71,13 +71,13 @@ router.post("/addItem", async (req, res) => {
         //convert string to int
         const quantNum = parseInt(quantity,10);
         //convert string to bool
-        const active = inUse? true : false;
+        const active = current? true : false;
         
         // create and add new item
-        const newItem = new models.Item({name,inStock: quantNum, inUse: active});
+        const newItem = new models.Item({name,quantity: quantNum, current: active});
         await newItem.save();
         
-        res.redirect("/");
+        res.redirect("/addItem");
         return;
     } catch (err) {
         return res.status(500).json({message: err.message});

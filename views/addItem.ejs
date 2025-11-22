@@ -60,8 +60,8 @@
                         <% items.forEach(item => { %>
                             <tr>
                                 <td><%= item.name%></td>
-                                <td><%= item.inStock%></td>
-                                <td><%= item.inUse%></td>
+                                <td><%= item.quantity%></td>
+                                <td><%= item.current%></td>
                             </tr>
                         <% }) %>
                     </table>
@@ -102,10 +102,10 @@
                     <div class="mb-4">
                         <label class="block text-gray-700
                                       text-sm font-bold mb-2"
-                               for="inUse">
+                               for="current">
                             In Use
                         </label>
-                        <select name="inUse" id="inUse">
+                        <select name="current" id="current">
                             <option value="true">Yes</option>
                             <option value="false">No</option>
                         </select>
