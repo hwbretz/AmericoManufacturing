@@ -44,9 +44,58 @@
                 Welcome <%= name %>
             </h1>
             <p class="mt-1 text-lg leading-8 text-gray-600">
-                View Orders
+                Orders
             </p>
             <% if(orders) { %>
+                
+                <p class="mt-1 text-lg leading-8 text-gray-600">
+                  Awaiting Decision
+                </p>
+                <form method="post" action="/api/approveOrder">
+                <div class="mt-1 text-sm text-black">
+                    <table>
+                        <tr>
+                            <th>Date</th>
+                            <th>Submitted By</th>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Status</th>
+
+                        </tr>
+                        
+                        <% orders.forEach(order => { %>
+                          <% if (order.approved === null){ %>
+                            <tr>
+                                <td><%= order.date%></td>
+                                <td><%= order.username%></td>
+                                <td><%= order.itemName %></td>
+                                <td><%= order.quantity%></td>
+                                <td>
+                                    <select name="approvals" id="approvals">
+                                        <option value="<%= [order.id,null] %>">  </option>
+                                        <option value="<%= [order.id,true] %>">Approve</option>
+                                        <option value="<%= [order.id,false] %>">Deny</option>
+                                    </select>
+                                </td>
+
+                            </tr>
+                          <% } %>
+
+                        <% }) %>
+                    </table>
+                </div>
+                <button class="w-full
+                                   bg-indigo-500
+                                   text-white
+                                   text-sm font-bold
+                                   py-2 px-4
+                                   rounded-md hover:bg-indigo-600
+                                   transition duration-300"
+                                   type="submit"
+                                   onClick={submit}>
+                        Update Orders
+                </button>
+            </form>
                 <p class="mt-1 text-lg leading-8 text-gray-600">
                     Approved Orders
                 </p>
@@ -54,50 +103,45 @@
                     <table>
                         <tr>
                             <th>Date</th>
-                            <th>Name</th>
-                            <th>Supplier</th>
+                            <th>Submitted By</th>
+                            <th>Item</th>
                             <th>Quantity</th>
-
                         </tr>
                         <% orders.forEach(order => { %>
-                          <% if (order.approved){
+                          <% if (order.approved){ %>
                             <tr>
+                                <td><%= order.itemName %></td>
+                                <td><%= order.username%></td>
                                 <td><%= order.date%></td>
-                                <td><%= order.name%></td>
-                                <td><%= %></td>
                                 <td><%= order.quantity%></td>
-
                             </tr>
-                          } %>
+                          <% } %>
 
                         <% }) %>
                     </table>
                 </div>
 
                 <p class="mt-1 text-lg leading-8 text-gray-600">
-                  Awaiting Decision
+                  Denied Orders
                 </p>
                 <div class="mt-1 text-sm text-black">
                     <table>
                         <tr>
                             <th>Date</th>
-                            <th>Name</th>
-                            <th>Supplier</th>
+                            <th>Submitted By</th>
+                            <th>Item</th>
                             <th>Quantity</th>
-                            <th>Status</th>
 
                         </tr>
                         <% orders.forEach(order => { %>
-                          <% if (order.approved === null){
-                            <tr>
+                          <% if (order.approved === false){ %>
+                            <tr> 
                                 <td><%= order.date%></td>
-                                <td><%= order.name%></td>
-                                <td><%= %></td>
+                                <td><%= order.username%></td>
+                                <td><%= order.itemName %> </td>
                                 <td><%= order.quantity%></td>
-                                <td><% %></td>
-
                             </tr>
-                          } %>
+                          <% } %>
 
                         <% }) %>
                     </table>

@@ -52,10 +52,24 @@ router.get("/createOrder", async (req, res) => {
         if (allItems){
             return res.render("createOrder", {name: user.name, items:allItems, manager: user.manager });
         } else {
-            return res.render("createOrder", {name: name});
+            return res.render("createOrder", {name: user.name});
         }
     }
     return res.render("home", {name: null,items: null});
+});
+
+router.get("/viewOrders", async (req, res) => {
+    if (req.session.name) {
+        var username = req.session.name;
+        const user = await models.User.findOne({username: username});
+        const allOrders = await models.Order.find();
+        if (allOrders){
+            return res.render("viewOrders", {name: user.name, orders: allOrders});
+        } else {
+            return res.render("viewOrders", {name: user.name});
+        }
+    }
+    return res.render("viewOrders", {name: null,items: null});
 });
 
 module.exports = router;

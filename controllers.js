@@ -6,6 +6,7 @@ const models = require("./models");
 const passport = require("passport");
 const bcrypt = require("bcrypt");
 const { error } = require("console");
+const mongoose = require("mongoose");
 
 //register route
 router.post("/register", async (req, res) => {
@@ -38,9 +39,7 @@ router.post("/register", async (req, res) => {
 });
 
 //login route
-router.post(
-    "/login",
-    passport.authenticate("local", { session: false }),
+router.post("/login", passport.authenticate("local", { session: false }),
     (req, res) => {
         req.session.name = req.body.username;
         req.session.save();
@@ -91,13 +90,14 @@ router.post("/createOrder", async (req, res) => {
         return res.status(403).render("createOrder", {error: "Missing information"});
     }
     try{
+        console.log(`${username}`);
         //find item
         const item = await models.Item.findOne({itemName});
-        const founditemID = item.itemID;
+        const founditem = item.name;
         //get date
         const currDate = new Date();
         const quant = parseInt(quantity,10);
-        const newOrder = new models.Order({itemID: founditemID, username:username, quantity:quant, date: currDate, approved: null})
+        const newOrder = new models.Order({itemName: founditem, username:username, quantity:quant, date: currDate, approved: null})
         await newOrder.save();
 
         res.redirect("/");
@@ -105,6 +105,42 @@ router.post("/createOrder", async (req, res) => {
     } catch (err) {
         return res.status(500).json({message: err.message});
     }
+});
+
+router.post("/approveOrder", async (req, res) => {
+    
+    const orders = req.body;
+    //console.log(orders);
+    if(orders=== null || orders === undefined){
+        return res.status(403).render("approveOrder", {error: "approval missing"});
+    }
+    try {
+        //approvals is the array of orders sent back, its all strings so have to parse
+        for (let order of orders.approvals) {
+            // find the id example:  '692332760ccf732fb56cefcb,true' is a value sent back
+            let comma_idx = order.indexOf(',');
+            //console.log(`ID: ${order.slice(0,comma_idx)}`);
+            const order_id = new mongoose.Types.ObjectId(order.slice(0,comma_idx));
+            
+            const foundOrder = await models.Order.findOne(order_id);
+            const approval_status = order.slice(comma_idx + 1, order.length + 1);
+            //console.log(approval_status);
+            //convert string to bool
+            if (approval_status === "true"){
+                foundOrder.approved = true;
+            } else if (approval_status === "false") {
+                foundOrder.approved = false;
+            }
+            
+            await foundOrder.save();
+
+        }
+        res.redirect("/viewOrders");
+            return;
+    } catch (err) {
+        return res.status(500).json({message: err.message});
+    }
+
 });
 
 module.exports = router;
