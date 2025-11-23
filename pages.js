@@ -34,10 +34,11 @@ router.get("/addItem", async (req, res) => {
     if (req.session.name) {
         var name = req.session.name;
         const items = await models.Item.find();
+        const suppliers = await models.Supplier.find();
         if(items){
-            return res.render("addItem", {name: name, items:items});
+            return res.render("addItem", {name: name, items:items, suppliers: suppliers});
         } else{
-            return res.render("addItem", {name: name});
+            return res.render("addItem", {name: name, suppliers: suppliers});
         }
         
     }
@@ -70,6 +71,15 @@ router.get("/viewOrders", async (req, res) => {
         }
     }
     return res.render("viewOrders", {name: null,items: null});
+});
+
+router.get("/addSupplier", async (req, res) => {
+    if (req.session.name) {
+        var name = req.session.name;
+        const suppliers = await models.Supplier.find();
+        return res.render("addSupplier", {name: name, suppliers:suppliers});
+    }
+    return res.render("home", { name: null, items: null});
 });
 
 module.exports = router;

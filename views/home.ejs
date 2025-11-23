@@ -7,7 +7,8 @@
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
     <style>
         body {
-            overflow-y: auto;
+            height: 100vh; /* Full viewport height */
+            overflow-y: scroll; /* Enable vertical scrolling */
         }
         table,
         td,
@@ -23,7 +24,7 @@
 </head>
 
 <body>
-    <div class="overflow-hidden h-screen p-8 bg-slate-200">
+    <div class="overflow-auto ... h-screen p-8 bg-slate-200">
         <header class="absolute inset-x-0
         						top-0 z-50">
             <nav class="flex items-center p-6 lg:px-8"
@@ -84,6 +85,16 @@
                             focus-visible:outline-offset-2
                             focus-visible:outline-indigo-600">
                         View/Approve Orders
+                    </a>
+                </div>
+                <div class="mt-10 flex gap-x-6">
+                    <a href="/addSupplier"
+                    class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm
+                            font-semibold text-white shadow-sm hover:bg-indigo-500
+                            focus-visible:outline focus-visible:outline-2
+                            focus-visible:outline-offset-2
+                            focus-visible:outline-indigo-600">
+                        Add Supplier
                     </a>
                 </div>
                 

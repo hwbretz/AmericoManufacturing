@@ -42,43 +42,41 @@
         <div class="pt-10">
             <h1 class="text-sm font-bold tracking-tight
                        text-gray-900 sm:text-xl">
-                Add New Items to Inventory
+                Add New Supplier
             </h1>
             <p class="mt-1 text-lg leading-8 text-gray-600">
                 Welcome <%= name %>
             </p>
-            <% if(items) { %>
+        <div class="pt-10">
+            <% if(suppliers) { %>
                 <p class="mt-1 text-lg leading-8 text-gray-600">
-                    Current Inventory
+                    Suppliers
                 </p>
                 <div class="mt-1 text-sm text-black">
                     <table>
                         <tr>
                             <th>Name</th>
-                            <th>Quantity On Hand</th>
-                            <th>Supplier</th>
-                            <th>In Use</th>
+                            <th>Website</th>
+                            <th>Email</th>
                         </tr>
-                        <% items.forEach(item => { %>
+                        <% suppliers.forEach(supplier => { %>
                             <tr>
-                                <td><%= item.name%></td>
-                                <td><%= item.quantity%></td>
-                                <td><%= item.supplierID%></td>
-                                <td><%= item.current%></td>
+                                <td><%= supplier.supplierName%></td>
+                                <td><%= supplier.website%></td>
+                                <td><%= supplier.email%></td>
                             </tr>
                         <% }) %>
                     </table>
                 </div>
             <% } %>
-        <div class="pt-10">
-            <h1 class="text-2xl font-bold mb-6 ">Add New Item</h1>
+            <h1 class="text-2xl font-bold mb-6 ">New Supplier</h1>
                 <form class="w-full max-w-sm  bg-white p-8
-                     rounded-md shadow-md" method="post" action="/api/addItem">
+                     rounded-md shadow-md" method="post" action="/api/addSupplier">
 
                     <div class="mb-4">
                         <label class="block text-gray-700
                    text-sm font-bold mb-2" for="name">
-                            Name
+                            Supplier Name
                         </label>
                         <input class="w-full px-3 py-2 border
                                       border-gray-300 rounded-md
@@ -86,45 +84,34 @@
                                       focus:border-indigo-500"
                                       type="text" id="name"
                                       name="name"
-                               placeholder="e.g. steel rod 3ft" />
+                               placeholder="e.g. Bob the Builder" />
                     </div>
                     <div class="mb-4">
                         <label class="block text-gray-700
                                       text-sm font-bold mb-2"
-                               for="quantity">
-                            Quantity On Hand
+                               for="webAddress">
+                            Web Address
                         </label>
                         <input class="w-full px-3 py-2 border
                                       border-gray-300 rounded-md
                                       focus:outline-none
                                       focus:border-indigo-500"
-                               type="number" id="quantity"
-                               name="quantity"
-                               placeholder="0" />
+                               type="text" id="webAddress"
+                               name="webAddress"
+                               placeholder="www.BobTheBuilder.net" />
                     </div>
                     <div class="mb-4">
-                         <label class="block text-gray-700
-                                       text-sm font-bold mb-2"
-                                for="supplierName">
-                           Supplier
-                         </label>
-                         <select name="supplierName" id="supplierName">
-                           <% suppliers.forEach(supplier => { %>
-                             <option value="<%=supplier.supplierName%>"><%=supplier.supplierName%> </option>
-                           <% }); %>
-                         </select>
-                     </div>
-
-                    <div class="mb-4">
                         <label class="block text-gray-700
-                                      text-sm font-bold mb-2"
-                               for="current">
-                            In Use
+                   text-sm font-bold mb-2" for="email">
+                            email
                         </label>
-                        <select name="current" id="current">
-                            <option value="true">Yes</option>
-                            <option value="false">No</option>
-                        </select>
+                        <input class="w-full px-3 py-2 border
+                                      border-gray-300 rounded-md
+                                      focus:outline-none
+                                      focus:border-indigo-500"
+                                      type="text" id="email"
+                                      name="email"
+                               placeholder="e.g. Bob the Builder" />
                     </div>
                     <button class="w-full
                                    bg-indigo-500
@@ -135,7 +122,7 @@
                                    transition duration-300"
                                    type="submit"
                                    onClick={submit}>
-                        Add Item
+                        Add Supplier
                     </button>
                 </form>
 

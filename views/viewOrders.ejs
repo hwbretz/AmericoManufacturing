@@ -7,7 +7,8 @@
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
     <style>
         body {
-            overflow-y: auto;
+            height: 100vh; /* Full viewport height */
+            overflow-y: scroll; /* Enable vertical scrolling */
         }
         table,
         td,
@@ -23,7 +24,7 @@
 </head>
 
 <body>
-    <div class="overflow-hidden h-screen p-8 bg-slate-200">
+    <div class="overflow-auto ... h-screen p-8 bg-slate-200">
         <header class="absolute inset-x-0
         						top-0 z-50">
             <nav class="flex items-center p-6 lg:px-8"
@@ -59,6 +60,7 @@
                             <th>Submitted By</th>
                             <th>Item</th>
                             <th>Quantity</th>
+                            <th>Supplier</th>
                             <th>Status</th>
 
                         </tr>
@@ -70,6 +72,7 @@
                                 <td><%= order.username%></td>
                                 <td><%= order.itemName %></td>
                                 <td><%= order.quantity%></td>
+                                <td><%= order.supplierID%></td>
                                 <td>
                                     <select name="approvals" id="approvals">
                                         <option value="<%= [order.id,null] %>">  </option>
@@ -106,14 +109,16 @@
                             <th>Submitted By</th>
                             <th>Item</th>
                             <th>Quantity</th>
+                            <th>Supplier</th>
                         </tr>
                         <% orders.forEach(order => { %>
                           <% if (order.approved){ %>
                             <tr>
-                                <td><%= order.itemName %></td>
-                                <td><%= order.username%></td>
                                 <td><%= order.date%></td>
+                                <td><%= order.username%></td>
+                                <td><%= order.itemName %></td>
                                 <td><%= order.quantity%></td>
+                                <td><%= order.supplierID%></td>
                             </tr>
                           <% } %>
 
@@ -131,7 +136,7 @@
                             <th>Submitted By</th>
                             <th>Item</th>
                             <th>Quantity</th>
-
+                            <th>Supplier</th>
                         </tr>
                         <% orders.forEach(order => { %>
                           <% if (order.approved === false){ %>
@@ -140,6 +145,7 @@
                                 <td><%= order.username%></td>
                                 <td><%= order.itemName %> </td>
                                 <td><%= order.quantity%></td>
+                                <td><%= order.supplierID%></td>
                             </tr>
                           <% } %>
 
