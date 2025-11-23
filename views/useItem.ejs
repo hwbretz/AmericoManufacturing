@@ -3,7 +3,7 @@
 <html>
 
 <head>
-    <title>Add Supplier</title>
+    <title>Update Items</title>
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
     <style>
         body {
@@ -42,76 +42,74 @@
         <div class="pt-10">
             <h1 class="text-sm font-bold tracking-tight
                        text-gray-900 sm:text-xl">
-                Add New Supplier
+                Update Inventory
             </h1>
             <p class="mt-1 text-lg leading-8 text-gray-600">
                 Welcome <%= name %>
             </p>
-        <div class="pt-10">
-            <% if(suppliers) { %>
+            <% if(items) { %>
                 <p class="mt-1 text-lg leading-8 text-gray-600">
-                    Suppliers
+                    Current Inventory
                 </p>
                 <div class="mt-1 text-sm text-black">
                     <table>
                         <tr>
                             <th>Name</th>
-                            <th>Website</th>
-                            <th>Email</th>
+                            <th>Quantity On Hand</th>
+                            <th>Supplier</th>
+                            <th>In Use</th>
                         </tr>
-                        <% suppliers.forEach(supplier => { %>
+                        <% items.forEach(item => { %>
                             <tr>
-                                <td><%= supplier.supplierName%></td>
-                                <td><%= supplier.website%></td>
-                                <td><%= supplier.email%></td>
+                                <td><%= item.name%></td>
+                                <td><%= item.quantity%></td>
+                                <td><%= item.supplierID%></td>
+                                <td><%= item.current%></td>
                             </tr>
                         <% }) %>
                     </table>
                 </div>
-            <% } %>
-            <h1 class="text-2xl font-bold mb-6 ">New Supplier</h1>
+
+                <div class="pt-10">
+            <h1 class="text-2xl font-bold mb-6 ">Edit item quantity</h1>
+                <p class="mt-1 text-lg leading-8 text-gray-600">
+                    Select quantity to use. If adding to inventory use negative number.
+                </p>
                 <form class="w-full max-w-sm  bg-white p-8
-                     rounded-md shadow-md" method="post" action="/api/addSupplier">
+                     rounded-md shadow-md" method="post" action="/api/useItem">
+                    <div style="visibility: hidden;">
+                        <input  
+                                type="text" id="username" 
+                                name="username"
+                                value="<%=name%>" />
+                        </input>
+                     </div>
+                    <div class="mb-4">
+                         <label class="block text-gray-700
+                                       text-sm font-bold mb-2"
+                                for="itemName">
+                           Item Name
+                         </label>
+                         <select name="itemName" id="itemName">
+                           <% items.forEach(item => { %>
+                             <option value="<%=item.name%>"><%=item.name%> </option>
+                           <% }); %>
+                         </select>
+                     </div>
 
                     <div class="mb-4">
                         <label class="block text-gray-700
-                   text-sm font-bold mb-2" for="name">
-                            Supplier Name
-                        </label>
-                        <input class="w-full px-3 py-2 border
-                                      border-gray-300 rounded-md
-                                      focus:outline-none
-                                      focus:border-indigo-500"
-                                      type="text" id="name"
-                                      name="name"
-                               placeholder="e.g. Bob the Builder" />
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700
                                       text-sm font-bold mb-2"
-                               for="webAddress">
-                            Web Address
+                               for="useQuantity">
+                            Quantity to use
                         </label>
                         <input class="w-full px-3 py-2 border
                                       border-gray-300 rounded-md
                                       focus:outline-none
                                       focus:border-indigo-500"
-                               type="text" id="webAddress"
-                               name="webAddress"
-                               placeholder="www.BobTheBuilder.net" />
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700
-                   text-sm font-bold mb-2" for="email">
-                            email
-                        </label>
-                        <input class="w-full px-3 py-2 border
-                                      border-gray-300 rounded-md
-                                      focus:outline-none
-                                      focus:border-indigo-500"
-                                      type="text" id="email"
-                                      name="email"
-                               placeholder="e.g. Bob@Builder.com" />
+                               type="number" id="useQuantity"
+                               name="useQuantity" value="0" 
+                               placeholder="0" />
                     </div>
                     <button class="w-full
                                    bg-indigo-500
@@ -122,11 +120,12 @@
                                    transition duration-300"
                                    type="submit"
                                    onClick={submit}>
-                        Add Supplier
+                        Update Item
                     </button>
                 </form>
 
         </div>
+            <% } %>
             <div class="mt-10 flex gap-x-6">
                 <a href="/api/logout"
                    class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm

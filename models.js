@@ -14,7 +14,6 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model("User", userSchema);
 
 const itemSchema = new mongoose.Schema({
-    ItemID: {type: mongoose.Schema.Types.ObjectId},
     name: { type: String, required: true, unique: true},
     supplierID: {type: String},
     quantity: { type: Number, required: true},
@@ -25,7 +24,6 @@ const itemSchema = new mongoose.Schema({
 const Item = mongoose.model("Item",itemSchema);
 
 const orderSchema = new mongoose.Schema({
-    orderID: {type: mongoose.Schema.Types.ObjectId},
     itemName: {type: String},
     supplierID: {type: String},
     username: {type: String},

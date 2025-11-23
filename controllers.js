@@ -97,7 +97,7 @@ router.post("/createOrder", async (req, res) => {
     try{
         
         //find item
-        const item = await models.Item.findOne({name: itemStr});
+        const item = await models.Item.findOne({name: itemName});
         console.log(`found: ${item.name}`)
         console.log(`${username} Creating new order: ${item.name}, Count: ${quantity}`);
         //get date
@@ -153,7 +153,7 @@ router.post("/approveOrder", async (req, res) => {
 
 });
 
-//addItem
+//addSupplier
 router.post("/addSupplier", async (req, res) => {
    //console.log(req.body);
     const { name,  webAddress, email} = req.body;
@@ -177,6 +177,35 @@ router.post("/addSupplier", async (req, res) => {
         return res.status(500).json({message: err.message});
     }
     
+});
+
+//useItem
+router.post("/useItem", async (req, res) => {
+    const {username, itemName, useQuantity} = req.body;
+
+    if (!itemName) {
+        return res.status(403).render("useItem", {error: "Missing information"});
+    }
+    try{
+        //find item
+        const item = await models.Item.findOne({name: itemName});
+         if (!item) {
+            return res.status(403).render("useItem", {error: "Item not found"});
+        }
+        //convert string to int
+        const toUse = parseInt(useQuantity,10);
+        if(toUse > item.quantity) {
+            return res.status(403).render("useItem", {error: "Quantity too high"});
+        } else {
+            item.quantity = item.quantity - toUse;
+            await item.save();
+            res.redirect("/useItem");
+            return;
+        }
+
+    } catch (err) {
+        return res.status(500).json({message: err.message});
+    }
 });
 
 module.exports = router;
