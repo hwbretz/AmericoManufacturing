@@ -57,9 +57,9 @@ router.get("/logout", (req, res) => {
 
 //addItem
 router.post("/addItem", async (req, res) => {
-    console.log(req.body);
+   //console.log(req.body);
     const { name,  quantity, current} = req.body;
-    if (!name && !quantity && !inUse) {
+    if (!name && !quantity) {
         return res.status(403).render("addItem", {error: "Missing information"});
     }
     try{
@@ -85,5 +85,26 @@ router.post("/addItem", async (req, res) => {
     
 });
 
+router.post("/createOrder", async (req, res) => {
+    const {username, itemName, quantity} = req.body;
+    if (!username && !itemName && !quantity){
+        return res.status(403).render("createOrder", {error: "Missing information"});
+    }
+    try{
+        //find item
+        const item = await models.Item.findOne({itemName});
+        const founditemID = item.itemID;
+        //get date
+        const currDate = new Date();
+        const quant = parseInt(quantity,10);
+        const newOrder = new models.Order({itemID: founditemID, username:username, quantity:quant, date: currDate, approved: null})
+        await newOrder.save();
+
+        res.redirect("/");
+        return;
+    } catch (err) {
+        return res.status(500).json({message: err.message});
+    }
+});
 
 module.exports = router;

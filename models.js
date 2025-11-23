@@ -26,7 +26,7 @@ const Item = mongoose.model("Item",itemSchema);
 
 const orderSchema = new mongoose.Schema({
     orderID: {type: mongoose.Schema.Types.ObjectId},
-    itemID: {},
+    itemID: {type: mongoose.Schema.Types.ObjectId},
     username: {type: String},
     quantity: {type: Number},
     date: {type: Date},

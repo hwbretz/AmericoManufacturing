@@ -44,4 +44,18 @@ router.get("/addItem", async (req, res) => {
     return res.render("home", { name: null, items: null});
 });
 
+router.get("/createOrder", async (req, res) => {
+    if (req.session.name) {
+        var username = req.session.name;
+        const user = await models.User.findOne({username: username});
+        const allItems = await models.Item.find();
+        if (allItems){
+            return res.render("createOrder", {name: user.name, items:allItems, manager: user.manager });
+        } else {
+            return res.render("createOrder", {name: name});
+        }
+    }
+    return res.render("home", {name: null,items: null});
+});
+
 module.exports = router;
