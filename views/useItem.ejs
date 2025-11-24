@@ -20,6 +20,13 @@
         table {
             text-align: center;
         }
+        input:invalid {
+            border: 2px dashed red;
+        }
+        input:invalid:required {
+        background-image: linear-gradient(to right, pink, lightgreen);
+        }
+
     </style>
 </head>
 
@@ -84,6 +91,9 @@
                                 value="<%=name%>" />
                         </input>
                      </div>
+                     <% if(error) { %>
+                    <p class="text-red-500"><%= error %></p>
+                    <% } %>
                     <div class="mb-4">
                          <label class="block text-gray-700
                                        text-sm font-bold mb-2"
@@ -109,7 +119,7 @@
                                       focus:border-indigo-500"
                                type="number" id="useQuantity"
                                name="useQuantity" value="0" 
-                               placeholder="0" />
+                               placeholder="0" required/>
                     </div>
                     <button class="w-full
                                    bg-indigo-500

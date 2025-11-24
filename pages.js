@@ -86,9 +86,9 @@ router.get("/useItem", async (req, res) => {
     if (req.session.name) {
         var name = req.session.name;
         const items = await models.Item.find();
-        return res.render("useItem", {name: name, items:items});
+        return res.render("useItem", {name: name, items:items, error: null});
     }
-    return res.render("home", { name: null, items: null});
+    return res.render("home", { name: null, items: null, error: null});
 });
 
 module.exports = router;

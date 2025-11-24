@@ -16,7 +16,7 @@ router.post("/register", async (req, res) => {
         return res.status(403).render("register", {error: "Missing information"});
     }
     else if (confirmpassword !== password) {
-        return res.status(403).render("register",{error: "Password incorrect"});
+        return res.status(403).render("register",{error: "Passwords don't match"});
     }
     try {
         //check if user in db
@@ -58,7 +58,7 @@ router.get("/logout", (req, res) => {
 router.post("/addItem", async (req, res) => {
    //console.log(req.body);
     const { name,  quantity, supplierName, current, } = req.body;
-    ;
+    
     if (!name && !quantity) {
         return res.status(403).render("addItem", {error: "Missing information"});
     }
@@ -136,10 +136,10 @@ router.post("/approveOrder", async (req, res) => {
             //convert string to bool
             if (approval_status === "true"){
                 foundOrder.approved = true;
-                console.log(`Order: ${order.slice(0,comma_idx)} Status: ${approval_status} `);
+                console.log(`Order: ${order.slice(0,comma_idx)} for ${foundOrder.quantity}  ${foundOrder.itemName} Status: ${approval_status}.`);
             } else if (approval_status === "false") {
                 foundOrder.approved = false;
-                console.log(`Order: ${order.slice(0,comma_idx)} Status: ${approval_status} `);
+                console.log(`Order: ${order.slice(0,comma_idx)} for ${foundOrder.quantity}  ${foundOrder.itemName} Status: ${approval_status}.`);
             }
             
             await foundOrder.save();
@@ -162,14 +162,17 @@ router.post("/addSupplier", async (req, res) => {
     }
     try{
         //check if supplier in db
-        const supplierExists = await models.Supplier.findOne({ name });
+        const supplierExists = await models.Supplier.findOne({ supplierName:name });
+        
         if (supplierExists) {
             return res.status(403).render("addSupplier", {error: "Supplier already in database"});
         }
         
         // create and add new item
         const newSupplier = new models.Supplier({supplierName: name, website: webAddress, email:email});
+        console.log()
         await newSupplier.save();
+        console.log(`New Supplier: ${name} added to database.`)
         
         res.redirect("/addSupplier");
         return;
@@ -195,9 +198,15 @@ router.post("/useItem", async (req, res) => {
         //convert string to int
         const toUse = parseInt(useQuantity,10);
         if(toUse > item.quantity) {
-            return res.status(403).render("useItem", {error: "Quantity too high"});
+            
+            const items = await models.Item.find();
+            
+            return res.status(403).render("useItem",{name: username, items:items,error: "Quantity Exceeeds Inventory"});
         } else {
             item.quantity = item.quantity - toUse;
+            if (item.quantity < 0) {
+                console.log(`${toUse} ${itemName} added to the inventory.`);
+            }
             await item.save();
             res.redirect("/useItem");
             return;

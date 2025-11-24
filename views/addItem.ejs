@@ -20,6 +20,12 @@
         table {
             text-align: center;
         }
+        input:invalid {
+            border: 2px dashed red;
+        }
+        input:invalid:required {
+        background-image: linear-gradient(to right, pink, lightgreen);
+        }
     </style>
 </head>
 
@@ -72,13 +78,13 @@
             <% } %>
         <div class="pt-10">
             <h1 class="text-2xl font-bold mb-6 ">Add New Item</h1>
-                <form class="w-full max-w-sm  bg-white p-8
+                <form class="w-full max-w-sm  bg-white p-8" id="addItemForm"
                      rounded-md shadow-md" method="post" action="/api/addItem">
 
                     <div class="mb-4">
                         <label class="block text-gray-700
                    text-sm font-bold mb-2" for="name">
-                            Name
+                           Item Name  - Required 5 Character Minimum
                         </label>
                         <input class="w-full px-3 py-2 border
                                       border-gray-300 rounded-md
@@ -87,12 +93,13 @@
                                       type="text" id="name"
                                       name="name"
                                placeholder="e.g. steel rod 3ft" />
+                        <span id="itemNameError"></span>
                     </div>
                     <div class="mb-4">
                         <label class="block text-gray-700
                                       text-sm font-bold mb-2"
                                for="quantity">
-                            Quantity On Hand
+                            Quantity On Hand  
                         </label>
                         <input class="w-full px-3 py-2 border
                                       border-gray-300 rounded-md
@@ -100,7 +107,7 @@
                                       focus:border-indigo-500"
                                type="number" id="quantity"
                                name="quantity"
-                               placeholder="0" />
+                               placeholder="0" value="0" min="0"/>
                     </div>
                     <div class="mb-4">
                          <label class="block text-gray-700
@@ -138,6 +145,19 @@
                         Add Item
                     </button>
                 </form>
+                <script>
+                    document.getElementById("addItemForm").onsubmit = function(event) {
+                        const itemName = document.getElementById("name").value;
+                        const itemNameError = document.getElementById("itemNameError");
+                        if (itemName.length < 5) {
+                            itemNameError.textContent = "Item Name too short.";
+                            itemNameError.style.color = "red";
+                            event.preventDefault();
+                        } else {
+                            itemNameError.textContent = "";
+                        }
+                    };
+                </script>
 
         </div>
             <div class="mt-10 flex gap-x-6">

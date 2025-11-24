@@ -26,7 +26,7 @@
             <div class="container mt-8 p-8">
                 <h1 class="text-2xl font-bold mb-6 ">Registration Form</h1>
                 <form class="w-full max-w-sm  bg-white p-8 
-                     rounded-md shadow-md" method="post" action="/api/register">
+                     rounded-md shadow-md" method="post" id="registerForm" action="/api/register">
                     <% if(error) { %>
                     <p class="text-red-500"><%= error %></p>
                     <% } %>
@@ -41,7 +41,8 @@
                                       focus:border-indigo-500"
                                       type="text" id="name" 
                                       name="name"
-                               placeholder="Jane Doe" />
+                               placeholder="Jane Doe" >
+                        <span id="nameError"></span>
                     </div>
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
@@ -53,7 +54,8 @@
                                       focus:border-indigo-500"
                                       type="text" id="username" 
                                       name="username"
-                               placeholder="John_01" />
+                               placeholder="John_01">
+                        <span id="userNameError"></span>
                     </div>
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2" for="manager">
@@ -66,7 +68,7 @@
                     </div>
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
-                            email
+                            Email
                         </label>
                         <input class="w-full px-3 py-2 border 
                                       border-gray-300 rounded-md 
@@ -74,13 +76,14 @@
                                       focus:border-indigo-500"
                                       type="text" id="email" 
                                       name="email"
-                               placeholder="JaneDoe@geocities.com" />
+                               placeholder="JaneDoe@geocities.com">
+                         <span id="emailError"></span> 
                     </div>
                     <div class="mb-4">
                         <label class="block text-gray-700 
                                       text-sm font-bold mb-2" 
                                for="password">
-                            Password
+                            Password - Required 8 character minimum
                         </label>
                         <input class="w-full px-3 py-2 border 
                                       border-gray-300 rounded-md 
@@ -89,6 +92,7 @@
                                type="password" id="password" 
                                name="password" 
                                placeholder="********" />
+                            <span id="passwordError"></span>
                     </div>
                     <div class="mb-4">
                         <label class="block text-gray-700 
@@ -104,6 +108,7 @@
                                id="confirm-password"
                                name="confirmpassword" 
                                placeholder="********" />
+                            <span id="confirmPasswordError"></span>
                     </div>
                     <button class="w-full 
                                    bg-indigo-500 
@@ -116,14 +121,72 @@
                                    onClick={submit}>
                         Register
                     </button>
-                    <p class="pt-5">
-                        Don't have a account
-                        <a href="/login" class=" text-cyan-600 
-                                                 cursor-pointer">
-                            Register here
-                        </a>
-                    </p>
+                    
                 </form>
+                <script>
+                    document.getElementById("registerForm").onsubmit = function(event) {
+                        const nameTxt = document.getElementById("name").value;
+                        const nameError = document.getElementById("nameError");
+                        const userTxt = document.getElementById("username").value;
+                        const userError = document.getElementById("userNameError");
+                        const emailTxt = document.getElementById("email").value;
+                        const emailError = document.getElementById("emailError");
+                        const passwordTxt = document.getElementById("password").value;
+                        const passError = document.getElementById("passwordError");
+                        const confirmPasswordTxt = document.getElementById("password").value;
+                        const confirmPassError = document.getElementById("confirmPasswordError");
+                        let regexCheck = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(emailTxt);
+
+                        if (nameTxt.length < 2 || userTxt.length < 2 || emailTxt.length < 5 || passwordTxt != confirmPasswordTxt || passwordTxt.length < 8 || confirmPasswordTxt < 8 || !regexCheck) {
+                            event.preventDefault();
+                        }
+                        if (nameTxt.length < 2){
+                            nameError.textContent = "Name must be 2 or more characters long";
+                            nameError.style.color = "red";
+                            
+                        } else {
+                            nameError.textContent = "";
+                        }
+
+                        if (userTxt.length < 2){
+                           userError.textContent = "userName must be 2 or more characters long";
+                           userError.style.color = "red";
+                            
+                        } else {
+                            userError.textContent = "";
+                        }
+
+                        if (!regexCheck || emailTxt.length < 5){
+                            emailError.textContent = "Invalid email";
+                            emailError.style.color = "red";
+                        } else {
+                            emailError.textContent = "";
+                        }
+
+                        if (passwordTxt.length < 8){
+                            passError.textContent = "Password must be at least 8 characters long";
+                            passError.style.color = "red";
+                            
+                        } else {
+                            passError.textContent = "";
+                        }
+
+                        if (confirmPasswordTxt.length < 8 || passwordTxt != confirmPasswordTxt){
+                            let errorOut = "";
+                            if(confirmPasswordTxt.length < 8){
+                                errorOut += "Password must be at least 8 characters long. ";
+                            }
+                            if (passwordTxt != confirmPasswordTxt){
+                                errorOut += "Passwords don't match."
+                            }
+                            confirmPassError.textContent = errorOut;
+                            confirmPassError.style.color = "red";
+                            
+                        } else {
+                            confirmPassError.textContent = "";
+                        }
+                    };
+                </script>
             </div>
         </div>
 </body>

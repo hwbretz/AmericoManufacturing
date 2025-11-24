@@ -24,6 +24,7 @@ app.use(
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+//app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 app.set("view engine","ejs");
@@ -48,7 +49,11 @@ passport.deserializeUser((id, done) => {
 // path to auth routes files
 app.use("/api/", controllers);
 app.use("/",routes);
-
+//app.use(function(req, res, next){
+  //  res.locals.success_messages = req.flash('success_messages');
+  //  res.locals.error_messages = req.flash('error_messages');
+  //  next();
+//});
 
 // Start the server
 //whatever port

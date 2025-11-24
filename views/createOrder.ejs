@@ -20,6 +20,7 @@
         table {
             text-align: center;
         }
+        
     </style>
 </head>
 
@@ -51,7 +52,7 @@
         <div class="pt-10">
             <h1 class="text-2xl font-bold mb-6 ">Create New Order</h1>
                 <form class="w-full max-w-sm  bg-white p-8
-                     rounded-md shadow-md" method="post" action="/api/createOrder">
+                     rounded-md shadow-md" method="post" id="createOrderForm" action="/api/createOrder">
                      <div style="visibility: hidden;">
                         <input  
                                 type="text" id="username" 
@@ -82,9 +83,10 @@
                                       border-gray-300 rounded-md
                                       focus:outline-none
                                       focus:border-indigo-500"
-                               type="number" id="quantity" min="0"
-                               name="quantity"
-                               placeholder="0" />
+                               type="number" id="quantity" min="1"
+                               name="quantity" id="quantityInput"
+                               placeholder="1" value = "1" required/>
+                        <span id="quantityError"></span>
                     </div>
 
                     <button class="w-full
@@ -99,6 +101,9 @@
                         Submit Order
                     </button>
                 </form>
+                
+
+                
          <% } else { %> 
             <div class="pt-4 mt-2">
                 <h1 class="text-sm font-bold tracking-tight
@@ -120,7 +125,6 @@
                         </a>
                     </div>
                 <% } %>
-                
             </div>
             
             <% } %>       
