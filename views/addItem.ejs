@@ -77,10 +77,13 @@
                 </div>
             <% } %>
         <div class="pt-10">
+            
             <h1 class="text-2xl font-bold mb-6 ">Add New Item</h1>
                 <form class="w-full max-w-sm  bg-white p-8" id="addItemForm"
                      rounded-md shadow-md" method="post" action="/api/addItem">
-
+                    <% if(error) { %>
+                        <p class="text-red-500"><%= error %></p>
+                    <% } %>
                     <div class="mb-4">
                         <label class="block text-gray-700
                    text-sm font-bold mb-2" for="name">

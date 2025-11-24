@@ -60,14 +60,20 @@ router.post("/addItem", async (req, res) => {
     const { name,  quantity, supplierName, current, } = req.body;
     
     if (!name && !quantity) {
-        return res.status(403).render("addItem", {error: "Missing information"});
+        var username = req.session.name;
+        const items = await models.Item.find();
+        const suppliers = await models.Supplier.find();
+        return res.status(403).render("addItem", {name: username, items:items, suppliers: suppliers,error: "Missing information"});
     }
     try{
         
         //check if item in db
         const itemExists = await models.Item.findOne({ name: name });
         if (itemExists) {
-            return res.status(403).render("addItem", {error: "Item already in database"});
+            var username = req.session.name;
+            const items = await models.Item.find();
+            const suppliers = await models.Supplier.find();
+            return res.status(403).render("addItem", {name: username, items:items, suppliers: suppliers,error: "Item already in database"});
         }
         //convert string to int
         const quantNum = parseInt(quantity,10);
@@ -92,6 +98,7 @@ router.post("/addItem", async (req, res) => {
 router.post("/createOrder", async (req, res) => {
     const {username, itemName, quantity} = req.body;
     if (!username && !itemName && !quantity){
+
         return res.status(403).render("createOrder", {error: "Missing information"});
     }
     try{
@@ -121,30 +128,53 @@ router.post("/approveOrder", async (req, res) => {
         return res.status(403).render("approveOrder", {error: "approval missing"});
     }
     try {
-        //approvals is the array of orders sent back, its all strings so have to parse
-        for (let order of orders.approvals) {
-            // find the id example:  '692332760ccf732fb56cefcb,true' is a value sent back
-            let comma_idx = order.indexOf(',');
-            
-            const order_id = new mongoose.Types.ObjectId(order.slice(0,comma_idx));
-            
+        console.log(orders);
+        //single order dont iterate
+        if  (typeof orders.approvals === "string"){
+            let comma_idx = orders.approvals.indexOf(',');
+            const order_id = new mongoose.Types.ObjectId(orders.approvals.slice(0,comma_idx));
             const foundOrder = await models.Order.findOne(order_id);
-         
-            const approval_status = order.slice(comma_idx + 1, order.length + 1);
-            
-            //console.log(approval_status);
+            const approval_status = orders.approvals.slice(comma_idx + 1, orders.approvals.length + 1);
             //convert string to bool
             if (approval_status === "true"){
                 foundOrder.approved = true;
-                console.log(`Order: ${order.slice(0,comma_idx)} for ${foundOrder.quantity}  ${foundOrder.itemName} Status: ${approval_status}.`);
+                console.log(`Order: ${orders.approvals.slice(0,comma_idx)} for ${foundOrder.quantity}  ${foundOrder.itemName} Status: ${approval_status}.`);
             } else if (approval_status === "false") {
                 foundOrder.approved = false;
-                console.log(`Order: ${order.slice(0,comma_idx)} for ${foundOrder.quantity}  ${foundOrder.itemName} Status: ${approval_status}.`);
+                console.log(`Order: ${orders.approvals.slice(0,comma_idx)} for ${foundOrder.quantity}  ${foundOrder.itemName} Status: ${approval_status}.`);
             }
             
             await foundOrder.save();
 
         }
+        //multiple orders
+        else {
+            //approvals is the array of orders sent back, its all strings so have to parse
+            for (let order of orders.approvals) {
+                // find the id example:  '692332760ccf732fb56cefcb,true' is a value sent back
+                let comma_idx = order.indexOf(',');
+                
+                const order_id = new mongoose.Types.ObjectId(order.slice(0,comma_idx));
+                
+                const foundOrder = await models.Order.findOne(order_id);
+            
+                const approval_status = order.slice(comma_idx + 1, order.length + 1);
+                
+                //console.log(approval_status);
+                //convert string to bool
+                if (approval_status === "true"){
+                    foundOrder.approved = true;
+                    console.log(`Order: ${order.slice(0,comma_idx)} for ${foundOrder.quantity}  ${foundOrder.itemName} Status: ${approval_status}.`);
+                } else if (approval_status === "false") {
+                    foundOrder.approved = false;
+                    console.log(`Order: ${order.slice(0,comma_idx)} for ${foundOrder.quantity}  ${foundOrder.itemName} Status: ${approval_status}.`);
+                }
+                
+                await foundOrder.save();
+
+            }
+        }
+        
         res.redirect("/viewOrders");
             return;
     } catch (err) {
@@ -158,7 +188,7 @@ router.post("/addSupplier", async (req, res) => {
    //console.log(req.body);
     const { name,  webAddress, email} = req.body;
     if (!email && !name) {
-        return res.status(403).render("addSupplier", {error: "Missing information"});
+        return res.status(403).render("addSupplier", {name: name, suppliers:suppliers,error: "Missing information"});
     }
     try{
         //check if supplier in db
@@ -170,7 +200,6 @@ router.post("/addSupplier", async (req, res) => {
         
         // create and add new item
         const newSupplier = new models.Supplier({supplierName: name, website: webAddress, email:email});
-        console.log()
         await newSupplier.save();
         console.log(`New Supplier: ${name} added to database.`)
         
@@ -187,13 +216,15 @@ router.post("/useItem", async (req, res) => {
     const {username, itemName, useQuantity} = req.body;
 
     if (!itemName) {
-        return res.status(403).render("useItem", {error: "Missing information"});
+        const items = await models.Item.find();
+        return res.status(403).render("useItem", {name: username, items:items,error: "Missing information"});
     }
     try{
         //find item
         const item = await models.Item.findOne({name: itemName});
          if (!item) {
-            return res.status(403).render("useItem", {error: "Item not found"});
+            const items = await models.Item.find();
+            return res.status(403).render("useItem", {name: username, items:items, error: "Item not found"});
         }
         //convert string to int
         const toUse = parseInt(useQuantity,10);

@@ -36,9 +36,9 @@ router.get("/addItem", async (req, res) => {
         const items = await models.Item.find();
         const suppliers = await models.Supplier.find();
         if(items){
-            return res.render("addItem", {name: name, items:items, suppliers: suppliers});
+            return res.render("addItem", {name: name, items:items, suppliers: suppliers, error: null});
         } else{
-            return res.render("addItem", {name: name, suppliers: suppliers});
+            return res.render("addItem", {name: name, suppliers: suppliers, error: null});
         }
         
     }
@@ -51,9 +51,9 @@ router.get("/createOrder", async (req, res) => {
         const user = await models.User.findOne({username: username});
         const allItems = await models.Item.find();
         if (allItems){
-            return res.render("createOrder", {name: user.name, items:allItems, manager: user.manager });
+            return res.render("createOrder", {name: user.name, items:allItems, manager: user.manager, error: null });
         } else {
-            return res.render("createOrder", {name: user.name});
+            return res.render("createOrder", {name: user.name, error: null});
         }
     }
     return res.render("home", {name: null,items: null});
@@ -65,9 +65,9 @@ router.get("/viewOrders", async (req, res) => {
         const user = await models.User.findOne({username: username});
         const allOrders = await models.Order.find();
         if (allOrders){
-            return res.render("viewOrders", {name: user.name, orders: allOrders});
+            return res.render("viewOrders", {name: user.name, orders: allOrders, error: null});
         } else {
-            return res.render("viewOrders", {name: user.name});
+            return res.render("viewOrders", {name: user.name, error: null});
         }
     }
     return res.render("viewOrders", {name: null,items: null});
@@ -77,9 +77,9 @@ router.get("/addSupplier", async (req, res) => {
     if (req.session.name) {
         var name = req.session.name;
         const suppliers = await models.Supplier.find();
-        return res.render("addSupplier", {name: name, suppliers:suppliers});
+        return res.render("addSupplier", {name: name, suppliers:suppliers, error: null});
     }
-    return res.render("home", { name: null, items: null});
+    return res.render("home", { name: null, suppliers: null, error: null});
 });
 
 router.get("/useItem", async (req, res) => {
