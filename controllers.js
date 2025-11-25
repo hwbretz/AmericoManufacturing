@@ -7,6 +7,7 @@ const passport = require("passport");
 const bcrypt = require("bcrypt");
 const { error } = require("console");
 const mongoose = require("mongoose");
+let userNameStr = "";
 
 //register route
 router.post("/register", async (req, res) => {
@@ -41,7 +42,11 @@ router.post("/register", async (req, res) => {
 //login route
 router.post("/login", passport.authenticate("local", { session: false }),
     (req, res) => {
+        
         req.session.name = req.body.username;
+        userNameStr = `${req.session.name}`;
+        let time = new Date();
+        console.log(`${req.session.name} logged in at ${time}.`)
         req.session.save();
 
         return res.redirect("/");
@@ -50,6 +55,9 @@ router.post("/login", passport.authenticate("local", { session: false }),
 
 //logout
 router.get("/logout", (req, res) => {
+    
+    let time = new Date();
+    console.log(`${userNameStr} Logged out at ${time}.`)
     req.session.destroy();
     res.redirect("/");
 });
@@ -82,7 +90,7 @@ router.post("/addItem", async (req, res) => {
         if (current === "true") {
             active = true;
         }
-        console.log(`New ${name} from ${supplierName} (${quantity} in stock) added to item database`);
+        console.log(`New ${name} from ${supplierName} (${quantity} in stock) added to item database by ${userNameStr}`);
         // create and add new item
         const newItem = new models.Item({name,supplierID:supplierName,quantity: quantNum, current: active});
         await newItem.save();
@@ -106,7 +114,7 @@ router.post("/createOrder", async (req, res) => {
         //find item
         const item = await models.Item.findOne({name: itemName});
         console.log(`found: ${item.name}`)
-        console.log(`${username} Creating new order: ${item.name}, Count: ${quantity}`);
+        console.log(`${userNameStr} Creating new order: ${item.name}, Count: ${quantity}`);
         //get date
         const currDate = new Date();
         const quant = parseInt(quantity,10);
@@ -128,7 +136,7 @@ router.post("/approveOrder", async (req, res) => {
         return res.status(403).render("approveOrder", {error: "approval missing"});
     }
     try {
-        console.log(orders);
+        //console.log(orders);
         //single order dont iterate
         if  (typeof orders.approvals === "string"){
             let comma_idx = orders.approvals.indexOf(',');
@@ -138,10 +146,10 @@ router.post("/approveOrder", async (req, res) => {
             //convert string to bool
             if (approval_status === "true"){
                 foundOrder.approved = true;
-                console.log(`Order: ${orders.approvals.slice(0,comma_idx)} for ${foundOrder.quantity}  ${foundOrder.itemName} Status: ${approval_status}.`);
+                console.log(`${userNameStr}: Order: ${orders.approvals.slice(0,comma_idx)} for ${foundOrder.quantity}  ${foundOrder.itemName} Status: Approved.`);
             } else if (approval_status === "false") {
                 foundOrder.approved = false;
-                console.log(`Order: ${orders.approvals.slice(0,comma_idx)} for ${foundOrder.quantity}  ${foundOrder.itemName} Status: ${approval_status}.`);
+                console.log(`${userNameStr}: Order: ${orders.approvals.slice(0,comma_idx)} for ${foundOrder.quantity}  ${foundOrder.itemName} Status: Denied.`);
             }
             
             await foundOrder.save();
@@ -164,10 +172,10 @@ router.post("/approveOrder", async (req, res) => {
                 //convert string to bool
                 if (approval_status === "true"){
                     foundOrder.approved = true;
-                    console.log(`Order: ${order.slice(0,comma_idx)} for ${foundOrder.quantity}  ${foundOrder.itemName} Status: ${approval_status}.`);
+                    console.log(`${userNameStr}: Order: ${order.slice(0,comma_idx)} for ${foundOrder.quantity}  ${foundOrder.itemName} Status: Approved.`);
                 } else if (approval_status === "false") {
                     foundOrder.approved = false;
-                    console.log(`Order: ${order.slice(0,comma_idx)} for ${foundOrder.quantity}  ${foundOrder.itemName} Status: ${approval_status}.`);
+                    console.log(`${userNameStr}: Order: ${order.slice(0,comma_idx)} for ${foundOrder.quantity}  ${foundOrder.itemName} Status: Denied.`);
                 }
                 
                 await foundOrder.save();
@@ -201,7 +209,7 @@ router.post("/addSupplier", async (req, res) => {
         // create and add new item
         const newSupplier = new models.Supplier({supplierName: name, website: webAddress, email:email});
         await newSupplier.save();
-        console.log(`New Supplier: ${name} added to database.`)
+        console.log(`${userNameStr} added New Supplier: ${name} to the database.`)
         
         res.redirect("/addSupplier");
         return;
@@ -235,8 +243,11 @@ router.post("/useItem", async (req, res) => {
             return res.status(403).render("useItem",{name: username, items:items,error: "Quantity Exceeeds Inventory"});
         } else {
             item.quantity = item.quantity - toUse;
-            if (item.quantity < 0) {
-                console.log(`${toUse} ${itemName} added to the inventory.`);
+            if (toUse < 0) {
+                console.log(`${userNameStr} added ${toUse * -1} ${itemName}  to the inventory.`);
+            }
+            else {
+                console.log(`${userNameStr} removed ${toUse} ${itemName} from the inventory.`);
             }
             await item.save();
             res.redirect("/useItem");
