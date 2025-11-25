@@ -73,7 +73,9 @@
             <h1 class="text-2xl font-bold mb-6 ">New Supplier</h1>
                 <form class="w-full max-w-sm  bg-white p-8
                      rounded-md shadow-md" id="supplierForm" method="post" action="/api/addSupplier">
-
+                    <% if(error) { %>
+                        <p class="text-red-500"><%= error %></p>
+                    <% } %>
                     <div class="mb-4">
                         <label class="block text-gray-700
                    text-sm font-bold mb-2" for="name">
@@ -86,7 +88,7 @@
                                       type="text" id="name"
                                       name="name"
                                       placeholder="e.g. Bob the Builder"
-                                      required minlength="2"/>
+                                      />
                         <span id="suppError"></span>    
                     </div>
                     <div class="mb-4">
@@ -139,8 +141,8 @@
                         if (suppName.length < 2 || !regexCheck) {
                             event.preventDefault();
                         }
-                        if (suppName.length < 2){
-                            supError.textContent = "Supplier Name must be 2 or more characters long";
+                        if (suppName.length < 3){
+                            supError.textContent = "Supplier Name must be 3 or more characters long";
                             suppError.style.color = "red";
                             
                         } else {

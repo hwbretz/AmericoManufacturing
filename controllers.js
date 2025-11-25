@@ -33,6 +33,7 @@ router.post("/register", async (req, res) => {
         // create and add new user
         const newUser = new models.User({username,password: hashedPassword, name : name, email : email, manager: manager});
         await newUser.save();
+        console.log(`New User: ${username} added to database.`)
         return res.redirect("/login");
     } catch (err) {
         return res.status(500).json({message: err.message});
@@ -196,14 +197,18 @@ router.post("/addSupplier", async (req, res) => {
    //console.log(req.body);
     const { name,  webAddress, email} = req.body;
     if (!email && !name) {
-        return res.status(403).render("addSupplier", {name: name, suppliers:suppliers,error: "Missing information"});
+        var username = req.session.name;
+        const suppliers = await models.Supplier.find();
+        return res.status(403).render("addSupplier", {name: username, suppliers:suppliers,error: "Missing information"});
     }
     try{
         //check if supplier in db
         const supplierExists = await models.Supplier.findOne({ supplierName:name });
         
         if (supplierExists) {
-            return res.status(403).render("addSupplier", {error: "Supplier already in database"});
+            var username = req.session.name;
+            const suppliers = await models.Supplier.find();
+            return res.status(403).render("addSupplier", {name: username, suppliers:suppliers,error: "Supplier already in database"});
         }
         
         // create and add new item
